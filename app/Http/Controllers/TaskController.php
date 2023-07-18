@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 use App\Http\Requests\addTask;
 use App\Http\Requests\updateTask;
 use App\Http\traits\Httpresponses;
 use App\Http\Resources\taskresource;
-
+use App\Mail\finished_task;
 class TaskController extends Controller
 {
     use Httpresponses;
@@ -97,6 +98,10 @@ class TaskController extends Controller
                 );
             }
             $task->update($request->all());
+            if ($task->wasChanged('completed') && $task->completed == true) {
+                $user = User::find($task->user_id);
+                \Mail::to($task->user->email)->send(new finished_task($task,));
+            }
             return $this->success(
                 new taskresource(collect([$task])),
                 'Update Task Success',
