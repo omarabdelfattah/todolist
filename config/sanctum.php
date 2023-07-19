@@ -46,7 +46,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => 60 * 24 * 3, // 3 days
+
 
     /*
     |--------------------------------------------------------------------------
@@ -64,4 +65,5 @@ return [
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
     ],
 
+    
 ];
